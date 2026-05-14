@@ -21,14 +21,17 @@
             overflow: hidden; background-color: #ffffff;
         }
 
-        .btn-container { position: absolute; left: 30px; z-index: 100; }
+        /* 1. 버튼 크기 대폭 축소 (15px) */
+        .btn-container { position: absolute; left: 25px; z-index: 100; }
         .nav-btn {
-            width: 22.5px; height: 22.5px; border-radius: 50%;
-            border: 0.8px solid #000; background: transparent;
-            color: #000; font-size: 11px; font-weight: 500;
+            width: 15px; height: 15px; border-radius: 50%;
+            border: 0.5px solid #000; background: transparent;
+            color: #000; font-size: 8px; font-weight: 400;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: 0.3s;
+            line-height: 1;
         }
+        /* 활성화 시 배경색만 채움 */
         .nav-btn.active { background-color: #000; color: #fff; }
 
         .image-track {
@@ -52,16 +55,16 @@
 
     <script>
         /**
-         * [시간 조절 포인트]
-         * 1. ROW_DURATIONS: 각 칸의 기본 이동 시간 (숫자가 클수록 느림)
-         * 2. SPEED_MULTIPLIER: 프로젝트별 속도 보정값 (이미지 개수가 많은 프로젝트의 숫자를 키우세요)
+         * [설정 포인트]
+         * 1. ROW_DURATIONS: 각 칸의 기본 이동 시간 (초)
+         * 2. SPEED_MULTIPLIER: 프로젝트별 속도 보정 (3번은 이미지가 많으므로 큰 숫자 부여)
          */
         const ROW_DURATIONS = [36, 45, 30, 54, 42, 48]; 
         
         const SPEED_MULTIPLIER = {
-            1: 1,   // 1번 프로젝트 (이미지 적음)
-            2: 1.5, // 2번 프로젝트 (이미지 보통)
-            3: 10    // 3번 프로젝트 (이미지 아주 많음 - 5배 더 느리게 보정)
+            1: 1,   
+            2: 1.5, 
+            3: 12    // 3번 프로젝트는 이미지가 많아 12배 더 천천히 움직이도록 설정
         };
 
         const rows = document.querySelectorAll('.row');
@@ -69,12 +72,10 @@
         let currentProject = 1;
         let cycleTimer;
 
-        // 프로젝트 로드 함수
         function loadProject(projectNum) {
             clearAll();
             currentProject = projectNum;
 
-            // 버튼 활성화 표시
             document.querySelectorAll('.nav-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === projectNum - 1);
             });
@@ -89,7 +90,8 @@
                 } else if (projectNum === 2) {
                     for (let i = 1; i <= 40; i++) imgSources.push(`p1-${String(i).padStart(2, '0')}.png`);
                 } else if (projectNum === 3) {
-                    for (let i = 3; i <= 147; i++) imgSources.push(`p2-${String(i).padStart(2, '0')}.png`);
+                    // p2-3.png ~ p2-147.png 형태
+                    for (let i = 3; i <= 147; i++) imgSources.push(`p2-${i}.png`);
                 }
 
                 imgSources.sort(() => Math.random() - 0.5);
@@ -102,7 +104,6 @@
 
                 row.appendChild(track);
 
-                // 프로젝트별 보정값 적용하여 애니메이션 실행
                 const finalDuration = ROW_DURATIONS[index] * SPEED_MULTIPLIER[projectNum];
                 animate(track, finalDuration);
             });
@@ -110,7 +111,7 @@
 
         function animate(el, duration) {
             const parentWidth = el.parentElement.offsetWidth;
-            const elWidth = el.scrollWidth || 2500;
+            const elWidth = el.scrollWidth || 3000;
             el.style.transition = 'none';
             el.style.transform = `translateX(${-elWidth}px)`;
             setTimeout(() => {
@@ -130,30 +131,25 @@
             });
         }
 
-        // 30초마다 다음 프로젝트로 전환하는 루프
         function startCycle() {
             loadProject(currentProject);
             cycleTimer = setInterval(() => {
                 currentProject = (currentProject % 3) + 1;
                 loadProject(currentProject);
-            }, 10000); // 30,000ms = 30초
+            }, 30000); 
         }
 
-        // 버튼 클릭 시 수동 제어 (수동 클릭 시 타이머 리셋)
         function manualControl(num) {
             clearInterval(cycleTimer);
             loadProject(num);
             currentProject = num;
-            // 수동 클릭 후 다시 30초 루프 시작
             cycleTimer = setInterval(() => {
                 currentProject = (currentProject % 3) + 1;
                 loadProject(currentProject);
             }, 30000);
         }
 
-        // 페이지 로드 시 시작
         window.onload = startCycle;
-
     </script>
 </body>
 </html>
