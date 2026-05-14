@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gesture Project Viewer v2 - Large Assets</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-
+    <title>Welcome to the Show!</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html {
@@ -23,92 +19,62 @@
         .row {
             position: relative; display: flex; align-items: center;
             overflow: hidden; background-color: #ffffff;
-            transition: background 0.5s ease;
         }
 
         .btn-container { position: absolute; left: 30px; z-index: 100; }
         .nav-btn {
-            width: 45px; height: 45px; border-radius: 50%;
+            width: 22.5px; height: 22.5px; border-radius: 50%;
             border: 0.8px solid #000; background: transparent;
-            color: #000; font-size: 18px; font-weight: 500;
+            color: #000; font-size: 11px; font-weight: 500;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: 0.3s;
         }
         .nav-btn.active { background-color: #000; color: #fff; }
 
-        /* 이미지 크기 1.3배 상향 조정 */
         .image-track {
-            position: absolute; display: flex; 
-            gap: 100px; /* 크기에 맞춰 간격도 소폭 확장 */
+            position: absolute; display: flex; gap: 100px;
             will-change: transform; white-space: nowrap;
         }
-        .image-track img { 
-            height: 143px; /* 기존 110px * 1.3 = 143px */
-            width: auto; 
-            object-fit: contain; 
-        }
+        .image-track img { height: 143px; width: auto; object-fit: contain; }
 
-        /* 화면 보호기 (Puzzle Mode) */
-        .row.idle-mode {
-            background-image: url('puzzle.webp');
-            background-size: 100vw 100vh;
-            background-repeat: no-repeat;
-            animation: wobble 6s ease-in-out infinite alternate;
-        }
-        .row:nth-child(1).idle-mode { background-position: 0 0%; }
-        .row:nth-child(2).idle-mode { background-position: 0 20%; }
-        .row:nth-child(3).idle-mode { background-position: 0 40%; }
-        .row:nth-child(4).idle-mode { background-position: 0 60%; }
-        .row:nth-child(5).idle-mode { background-position: 0 80%; }
-        .row:nth-child(6).idle-mode { background-position: 0 100%; }
-
-        @keyframes wobble {
-            from { transform: translateX(-20px); }
-            to { transform: translateX(20px); }
-        }
-
-        #video-container {
-            position: fixed; bottom: 20px; right: 20px;
-            width: 160px; height: 120px; border: 1px solid #eee;
-            z-index: 1000; border-radius: 10px; overflow: hidden;
-            background: #000; transform: scaleX(-1); opacity: 0.7;
-        }
-        #webcam { width: 100%; height: 100%; object-fit: cover; }
-        #status-bar {
-            position: fixed; bottom: 150px; right: 20px;
-            width: 160px; height: 6px; background: #eee;
-            border-radius: 3px; z-index: 1000;
-        }
-        #status-fill { width: 0%; height: 100%; background: #000; transition: width 0.1s; }
     </style>
 </head>
 <body>
 
     <div class="container" id="main-container">
-        <div class="row"><div class="btn-container"><button class="nav-btn" onclick="loadProject(1)">1</button></div></div>
+        <div class="row"><div class="btn-container"><button class="nav-btn" id="btn-1" onclick="manualControl(1)">i</button></div></div>
         <div class="row"></div>
-        <div class="row"><div class="btn-container"><button class="nav-btn" onclick="loadProject(2)">2</button></div></div>
+        <div class="row"><div class="btn-container"><button class="nav-btn" id="btn-2" onclick="manualControl(2)">ii</button></div></div>
         <div class="row"></div>
         <div class="row"></div>
-        <div class="row"><div class="btn-container"><button class="nav-btn" onclick="loadProject(3)">3</button></div></div>
+        <div class="row"><div class="btn-container"><button class="nav-btn" id="btn-3" onclick="manualControl(3)">iii</button></div></div>
     </div>
 
-    <div id="status-bar"><div id="status-fill"></div></div>
-    <div id="video-container"><video id="webcam" autoplay playsinline></video></div>
-
     <script>
-        const ROW_DURATIONS = [45, 59, 36, 60, 72, 52]; 
+        /**
+         * [시간 조절 포인트]
+         * 1. ROW_DURATIONS: 각 칸의 기본 이동 시간 (숫자가 클수록 느림)
+         * 2. SPEED_MULTIPLIER: 프로젝트별 속도 보정값 (이미지 개수가 많은 프로젝트의 숫자를 키우세요)
+         */
+        const ROW_DURATIONS = [36, 45, 30, 54, 42, 48]; 
         
+        const SPEED_MULTIPLIER = {
+            1: 1,   // 1번 프로젝트 (이미지 적음)
+            2: 1.5, // 2번 프로젝트 (이미지 보통)
+            3: 10    // 3번 프로젝트 (이미지 아주 많음 - 5배 더 느리게 보정)
+        };
+
         const rows = document.querySelectorAll('.row');
         let activeAnimations = [];
-        let idleTimer;
-        let isIdle = false;
+        let currentProject = 1;
+        let cycleTimer;
 
+        // 프로젝트 로드 함수
         function loadProject(projectNum) {
-            exitIdleMode();
             clearAll();
-            resetIdleTimer();
+            currentProject = projectNum;
 
+            // 버튼 활성화 표시
             document.querySelectorAll('.nav-btn').forEach((b, i) => {
                 b.classList.toggle('active', i === projectNum - 1);
             });
@@ -135,7 +101,10 @@
                 });
 
                 row.appendChild(track);
-                animate(track, ROW_DURATIONS[index]);
+
+                // 프로젝트별 보정값 적용하여 애니메이션 실행
+                const finalDuration = ROW_DURATIONS[index] * SPEED_MULTIPLIER[projectNum];
+                animate(track, finalDuration);
             });
         }
 
@@ -161,79 +130,30 @@
             });
         }
 
-        function resetIdleTimer() {
-            clearTimeout(idleTimer);
-            if (!isIdle) {
-                idleTimer = setTimeout(enterIdleMode, 15000); 
-            }
+        // 30초마다 다음 프로젝트로 전환하는 루프
+        function startCycle() {
+            loadProject(currentProject);
+            cycleTimer = setInterval(() => {
+                currentProject = (currentProject % 3) + 1;
+                loadProject(currentProject);
+            }, 10000); // 30,000ms = 30초
         }
 
-        function enterIdleMode() {
-            isIdle = true;
-            clearAll();
-            rows.forEach(row => row.classList.add('idle-mode'));
+        // 버튼 클릭 시 수동 제어 (수동 클릭 시 타이머 리셋)
+        function manualControl(num) {
+            clearInterval(cycleTimer);
+            loadProject(num);
+            currentProject = num;
+            // 수동 클릭 후 다시 30초 루프 시작
+            cycleTimer = setInterval(() => {
+                currentProject = (currentProject % 3) + 1;
+                loadProject(currentProject);
+            }, 30000);
         }
 
-        function exitIdleMode() {
-            isIdle = false;
-            rows.forEach(row => row.classList.remove('idle-mode'));
-        }
+        // 페이지 로드 시 시작
+        window.onload = startCycle;
 
-        const videoElement = document.getElementById('webcam');
-        const statusFill = document.getElementById('status-fill');
-        let gestureTimer = 0;
-        let lastGesture = -1;
-
-        function onResults(results) {
-            let currentGesture = -1;
-
-            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-                resetIdleTimer();
-                const lm = results.multiHandLandmarks[0];
-                
-                const distO = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
-                const isIndexUp = lm[8].y < lm[6].y;
-                const isMiddleUp = lm[12].y < lm[10].y;
-                const isRingDown = lm[16].y > lm[14].y;
-                const isPinkyDown = lm[20].y > lm[18].y;
-
-                if (distO < 0.05) {
-                    currentGesture = 2; // 3번
-                } else if (isIndexUp && isMiddleUp && isRingDown && isPinkyDown) {
-                    currentGesture = 1; // 2번 (브이)
-                } else {
-                    currentGesture = 0; // 1번 (정지)
-                }
-
-                if (currentGesture === lastGesture && currentGesture !== -1) {
-                    gestureTimer += 40; 
-                    statusFill.style.width = (gestureTimer / 1000 * 100) + "%";
-                    
-                    if (gestureTimer >= 1000) { // 1초
-                        loadProject(currentGesture + 1);
-                        gestureTimer = 0;
-                    }
-                } else {
-                    gestureTimer = 0;
-                    statusFill.style.width = "0%";
-                }
-                lastGesture = currentGesture;
-            } else {
-                gestureTimer = 0;
-                statusFill.style.width = "0%";
-            }
-        }
-
-        const hands = new Hands({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}` });
-        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
-        hands.onResults(onResults);
-
-        const camera = new Camera(videoElement, {
-            onFrame: async () => { await hands.send({ image: videoElement }); },
-            width: 640, height: 480
-        });
-        camera.start();
-        resetIdleTimer();
     </script>
 </body>
 </html>
