@@ -3,25 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChaerinKim Portfolio</title>
+  <title>Chaerin Kim Portfolio</title>
 
   <style>
     @font-face {
       font-family: "Wanted Sans";
-      src: local("Wanted Sans Medium");
-      font-weight: 500;
+      src: local("Wanted Sans Regular");
+      font-weight: 400;
     }
 
     @font-face {
       font-family: "Gotham";
-      src: local("Gotham Medium");
-      font-weight: 500;
-    }
-
-    @font-face {
-      font-family: "Gotham";
-      src: local("Gotham Bold");
-      font-weight: 700;
+      src: local("Gotham Regular");
+      font-weight: 400;
     }
 
     * {
@@ -30,35 +24,181 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --main-color: #1c1c1c;
+      --header-color: #1c1c1c;
+    }
+
+    html,
     body {
+      width: 100%;
       background: #fff;
-      color: #000;
+      color: var(--main-color);
       overflow-x: hidden;
+      font-family: "Gotham", "Wanted Sans", sans-serif;
+      font-size: 11.5pt;
+      font-weight: 400;
+    }
+
+    body {
+      word-break: keep-all;
+    }
+
+    b {
+      font-weight: 400;
     }
 
     header {
       position: fixed;
       top: 14px;
       left: 16px;
-      z-index: 100;
+      right: 16px;
+      z-index: 9000;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: start;
+      pointer-events: none;
+      color: var(--header-color);
+    }
+
+    header button,
+    header a,
+    .email-wrap,
+    .logo-wrap {
+      pointer-events: auto;
+    }
+
+    .logo-wrap {
+      justify-self: start;
+      position: relative;
+      width: 280px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .logo,
+    .logo-hint,
+    .click-link,
+    .email,
+    .sound-hint {
+      font-family: "Gotham", "Wanted Sans", sans-serif;
+      font-size: 11.5pt;
+      font-weight: 400;
+      color: var(--header-color);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .logo,
+    .logo-hint {
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .logo {
-      font-family: "Gotham", sans-serif;
-      font-weight: 700;
+      opacity: 1;
+    }
+
+    .logo-hint {
+      opacity: 0;
+      pointer-events: none;
+      font-family: "Wanted Sans", sans-serif;
       font-size: 12pt;
-      letter-spacing: -0.01em;
+    }
+
+    .logo-wrap.logo-hint-active .logo {
+      opacity: 0;
+    }
+
+    .logo-wrap.logo-hint-active .logo-hint {
+      opacity: 1;
+    }
+
+    .click-link {
+      justify-self: center;
+    }
+
+    .email-wrap {
+      justify-self: end;
+      position: relative;
+      width: 210px;
+      height: 20px;
+      text-align: right;
       cursor: pointer;
-      background: none;
-      border: none;
-      color: #000;
     }
 
-    main {
-      width: 100%;
+    .email,
+    .sound-hint {
+      position: absolute;
+      top: 0;
+      right: 0;
     }
 
-    .portfolio-image {
+    .email {
+      opacity: 1;
+    }
+
+    .sound-hint {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .email-wrap.hint-active .email {
+      opacity: 0;
+    }
+
+    .email-wrap.hint-active .sound-hint {
+      opacity: 1;
+    }
+
+    .hero {
+      width: 100vw;
+      height: 100vh;
+      background-image: url("bg1.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    .project-menu {
+  width: 100vw;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: #1c1c1c;
+}
+
+.project-btn {
+  padding: 18px 0;
+  background: #1c1c1c;
+  border: none;
+  font-family: "Gotham", sans-serif;
+  font-size: 11.5pt;
+  font-weight: 400;
+  color: #ffffff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.project-btn.active {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+    .portfolio-images {
+      width: 100vw;
+      background: #fff;
+    }
+
+    .portfolio-images img,
+    .profile-images img {
       display: block;
       width: 100vw;
       height: auto;
@@ -70,59 +210,58 @@
       width: 100vw;
       height: 100vh;
       background: #fff;
-      z-index: 999;
+      z-index: 8000;
       display: none;
+      overflow-y: auto;
     }
 
     .profile-popup.active {
-      display: flex;
+      display: block;
     }
 
     .profile-inner {
       width: 100%;
-      height: 100%;
+      min-height: 100vh;
       display: grid;
       grid-template-columns: 1fr 1fr;
+      background: #fff;
     }
 
     .profile-column {
+      width: 100%;
+      min-height: 100vh;
       padding: 72px 48px 48px 48px;
       text-align: left;
       font-family: "Wanted Sans", sans-serif;
-      font-weight: 500;
       font-size: 12pt;
+      font-weight: 400;
       line-height: 1.58;
       letter-spacing: -0.015em;
+      color: var(--main-color);
+      background: #fff;
       word-break: keep-all;
     }
 
     .profile-title {
-      display: block;
       margin-bottom: 18px;
       font-family: "Wanted Sans", sans-serif;
-      font-weight: 500;
       font-size: 12pt;
+      font-weight: 400;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
-    .english-bold {
+    .profile-name {
       font-family: "Gotham", sans-serif;
-      font-weight: 700;
-      font-size: 12pt;
+      font-size: 11.5pt;
+      font-weight: 400;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
-    .close-btn {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      z-index: 1000;
-      font-family: "Gotham", sans-serif;
-      font-weight: 500;
-      font-size: 18px;
-      line-height: 1;
-      background: none;
-      border: none;
-      color: #000;
-      cursor: pointer;
+    .profile-images {
+      width: 100vw;
+      background: #fff;
     }
 
     @media (max-width: 768px) {
@@ -131,148 +270,238 @@
       }
 
       .profile-column {
+        min-height: auto;
         padding: 64px 24px 24px 24px;
+      }
+
+      .project-menu {
+        grid-template-columns: repeat(5, 1fr);
       }
     }
   </style>
 </head>
 
 <body>
+  <audio id="bgSound" src="sound.mp3" loop></audio>
+
   <header>
-    <button class="logo" onclick="openProfile()">ChaerinKim</button>
+    <div id="logoWrap" class="logo-wrap" onclick="toggleProfile()">
+      <button class="logo">Chaerin Kim</button>
+      <div class="logo-hint">채책은 어디서든 넘나들고 파고듭니다</div>
+    </div>
+
+    <a
+      class="click-link"
+      href="https://www.behance.net/gallery/251212373/-Chaerin-Kim-2026-"
+      target="_blank"
+    >
+      Click Here
+    </a>
+
+    <div id="emailWrap" class="email-wrap" onclick="playSound()">
+      <button class="email">e.chaerinkim@gmail.com</button>
+      <div class="sound-hint">Turn on the sound!</div>
+    </div>
   </header>
 
   <main>
-    <section class="portfolio">
-      <img src="w1.jpg" class="portfolio-image" alt="portfolio image 1" />
-      <img src="w2.jpg" class="portfolio-image" alt="portfolio image 2" />
-      <img src="w3.jpg" class="portfolio-image" alt="portfolio image 3" />
-      <img src="w4.jpg" class="portfolio-image" alt="portfolio image 4" />
-      <img src="w5.jpg" class="portfolio-image" alt="portfolio image 5" />
-      <img src="w6.jpg" class="portfolio-image" alt="portfolio image 6" />
-      <img src="w7.jpg" class="portfolio-image" alt="portfolio image 7" />
-      <img src="w8.jpg" class="portfolio-image" alt="portfolio image 8" />
-      <img src="w9.jpg" class="portfolio-image" alt="portfolio image 9" />
-      <img src="w10.jpg" class="portfolio-image" alt="portfolio image 10" />
-      <img src="w11.jpg" class="portfolio-image" alt="portfolio image 11" />
-      <img src="w12.jpg" class="portfolio-image" alt="portfolio image 12" />
-      <img src="w13.jpg" class="portfolio-image" alt="portfolio image 13" />
-      <img src="w14.jpg" class="portfolio-image" alt="portfolio image 14" />
-      <img src="w15.jpg" class="portfolio-image" alt="portfolio image 15" />
-      <img src="w16.jpg" class="portfolio-image" alt="portfolio image 16" />
-      <img src="w17.jpg" class="portfolio-image" alt="portfolio image 17" />
-      <img src="w18.jpg" class="portfolio-image" alt="portfolio image 18" />
-      <img src="w19.jpg" class="portfolio-image" alt="portfolio image 19" />
-      <img src="w20.jpg" class="portfolio-image" alt="portfolio image 20" />
-      <img src="w21.jpg" class="portfolio-image" alt="portfolio image 21" />
-      <img src="w22.jpg" class="portfolio-image" alt="portfolio image 22" />
-      <img src="w23.jpg" class="portfolio-image" alt="portfolio image 23" />
-      <img src="w24.jpg" class="portfolio-image" alt="portfolio image 24" />
-      <img src="w25.jpg" class="portfolio-image" alt="portfolio image 25" />
-      <img src="w26.jpg" class="portfolio-image" alt="portfolio image 26" />
-      <img src="w27.jpg" class="portfolio-image" alt="portfolio image 27" />
-      <img src="w28.jpg" class="portfolio-image" alt="portfolio image 28" />
-      <img src="w29.jpg" class="portfolio-image" alt="portfolio image 29" />
-      <img src="w30.jpg" class="portfolio-image" alt="portfolio image 30" />
-      <img src="w31.jpg" class="portfolio-image" alt="portfolio image 31" />
-      <img src="w32.jpg" class="portfolio-image" alt="portfolio image 32" />
-      <img src="w33.jpg" class="portfolio-image" alt="portfolio image 33" />
-      <img src="w34.jpg" class="portfolio-image" alt="portfolio image 34" />
-      <img src="w35.jpg" class="portfolio-image" alt="portfolio image 35" />
-      <img src="w36.jpg" class="portfolio-image" alt="portfolio image 36" />
-      <img src="w37.jpg" class="portfolio-image" alt="portfolio image 37" />
-      <img src="w38.jpg" class="portfolio-image" alt="portfolio image 38" />
-      <img src="w39.jpg" class="portfolio-image" alt="portfolio image 39" />
-      <img src="w40.jpg" class="portfolio-image" alt="portfolio image 40" />
-      <img src="w41.jpg" class="portfolio-image" alt="portfolio image 41" />
-      <img src="w42.jpg" class="portfolio-image" alt="portfolio image 42" />
-      <img src="w43.jpg" class="portfolio-image" alt="portfolio image 43" />
-      <img src="w44.jpg" class="portfolio-image" alt="portfolio image 44" />
-      <img src="w45.jpg" class="portfolio-image" alt="portfolio image 45" />
-      <img src="w46.jpg" class="portfolio-image" alt="portfolio image 46" />
-      <img src="w47.jpg" class="portfolio-image" alt="portfolio image 47" />
-      <img src="w48.jpg" class="portfolio-image" alt="portfolio image 48" />
-      <img src="w49.jpg" class="portfolio-image" alt="portfolio image 49" />
-      <img src="w50.jpg" class="portfolio-image" alt="portfolio image 50" />
-      <img src="w51.jpg" class="portfolio-image" alt="portfolio image 51" />
-      <img src="w52.jpg" class="portfolio-image" alt="portfolio image 52" />
-      <img src="w53.jpg" class="portfolio-image" alt="portfolio image 53" />
-      <img src="w54.jpg" class="portfolio-image" alt="portfolio image 54" />
-      <img src="w55.jpg" class="portfolio-image" alt="portfolio image 55" />
-      <img src="w56.jpg" class="portfolio-image" alt="portfolio image 56" />
-      <img src="w57.jpg" class="portfolio-image" alt="portfolio image 57" />
-      <img src="w58.jpg" class="portfolio-image" alt="portfolio image 58" />
-      <img src="w59.jpg" class="portfolio-image" alt="portfolio image 59" />
-      <img src="w60.jpg" class="portfolio-image" alt="portfolio image 60" />
-      <img src="w61.jpg" class="portfolio-image" alt="portfolio image 61" />
-      <img src="w62.jpg" class="portfolio-image" alt="portfolio image 62" />
-      <img src="w63.jpg" class="portfolio-image" alt="portfolio image 63" />
-      <img src="w64.jpg" class="portfolio-image" alt="portfolio image 64" />
-      <img src="w65.jpg" class="portfolio-image" alt="portfolio image 65" />
-      <img src="w66.jpg" class="portfolio-image" alt="portfolio image 66" />
-      <img src="w67.jpg" class="portfolio-image" alt="portfolio image 67" />
-      <img src="w68.jpg" class="portfolio-image" alt="portfolio image 68" />
-      <img src="w69.jpg" class="portfolio-image" alt="portfolio image 69" />
-      <img src="w70.jpg" class="portfolio-image" alt="portfolio image 70" />
-      <img src="w71.jpg" class="portfolio-image" alt="portfolio image 71" />
-      <img src="w72.jpg" class="portfolio-image" alt="portfolio image 72" />
-      <img src="w73.jpg" class="portfolio-image" alt="portfolio image 73" />
-      <img src="w74.jpg" class="portfolio-image" alt="portfolio image 74" />
-      <img src="w75.jpg" class="portfolio-image" alt="portfolio image 75" />
-      <img src="w76.jpg" class="portfolio-image" alt="portfolio image 76" />
-      <img src="w77.jpg" class="portfolio-image" alt="portfolio image 77" />
-      <img src="w78.jpg" class="portfolio-image" alt="portfolio image 78" />
-      <img src="w79.jpg" class="portfolio-image" alt="portfolio image 79" />
-      <img src="w80.jpg" class="portfolio-image" alt="portfolio image 80" />
-      <img src="w81.jpg" class="portfolio-image" alt="portfolio image 81" />
-      <img src="w82.jpg" class="portfolio-image" alt="portfolio image 82" />
-      <img src="w83.jpg" class="portfolio-image" alt="portfolio image 83" />
-      <img src="w84.jpg" class="portfolio-image" alt="portfolio image 84" />
-      <img src="w85.jpg" class="portfolio-image" alt="portfolio image 85" />
-      <img src="w86.jpg" class="portfolio-image" alt="portfolio image 86" />
-      <img src="w87.jpg" class="portfolio-image" alt="portfolio image 87" />
-      <img src="w88.jpg" class="portfolio-image" alt="portfolio image 88" />
-      <img src="w89.jpg" class="portfolio-image" alt="portfolio image 89" />
-      <img src="w90.jpg" class="portfolio-image" alt="portfolio image 90" />
-      <img src="w91.jpg" class="portfolio-image" alt="portfolio image 91" />
-      <img src="w92.jpg" class="portfolio-image" alt="portfolio image 92" />
-      <img src="w93.jpg" class="portfolio-image" alt="portfolio image 93" />
-      <img src="w94.jpg" class="portfolio-image" alt="portfolio image 94" />
-      <img src="w95.jpg" class="portfolio-image" alt="portfolio image 95" />
+    <section id="hero" class="hero" onclick="randomBg()"></section>
+
+    <section class="project-menu">
+      <button class="project-btn active" onclick="renderGallery(0)">01</button>
+      <button class="project-btn" onclick="renderGallery(1)">02</button>
+      <button class="project-btn" onclick="renderGallery(2)">03</button>
+      <button class="project-btn" onclick="renderGallery(3)">04</button>
+      <button class="project-btn" onclick="renderGallery(4)">05</button>
     </section>
+
+    <section id="portfolioImages" class="portfolio-images"></section>
   </main>
 
   <section id="profilePopup" class="profile-popup">
-    <button class="close-btn" onclick="closeProfile()">×</button>
-
     <div class="profile-inner">
       <div class="profile-column">
-        <span class="profile-title">채책</span>
-        채책은 김채린 외 2인 이상 함께하며 다양한 활동이 펼쳐지는 자유로운 소통의 공간이자 모임입니다.
-        서울 및 경기도 중심으로 미학 판단에서 영감을 얻어 실험적인 그래픽을 작업합니다.
+        <div class="profile-title">채책</div>
+        <p>
+          채책은 김채린 외 2인 이상 함께하며 다양한 활동이 펼쳐지는 자유로운 소통의 공간이자 모임입니다.
+          서울 및 경기도 중심으로 미학 판단에서 영감을 얻어 실험적인 그래픽을 작업합니다.
+        </p>
       </div>
 
       <div class="profile-column">
-        <span class="profile-title">
-          2026 <span class="english-bold">Chaerin Kim</span>
-        </span>
-        어디든지 넘나들고 파고듭니다. 완전하거나 불완전해도 상관없습니다.
-        책 외에 여러 매체를 넘나드는 시각 매개 현상을 통해 실험적 공간을 펼치며,
-        오직 최소한의 이미지 안에 최대의 시각 경험을 상상하도록 유도합니다.
+        <div class="profile-title">
+          2026 <span class="profile-name">Chaerin Kim</span>
+        </div>
+        <p>
+          어디든지 넘나들고 파고듭니다. 완전하거나 불완전해도 상관없습니다.
+          책 외에 여러 매체를 넘나드는 시각 매개 현상을 통해 실험적 공간을 펼치며,
+          오직 최소한의 이미지 안에 최대의 시각 경험을 상상하도록 유도합니다.
+        </p>
       </div>
+    </div>
+
+    <div class="profile-images">
+      <img src="w2.jpg" alt="profile image 2" />
+      <img src="w3.jpg" alt="profile image 3" />
     </div>
   </section>
 
   <script>
-    function openProfile() {
-      document.getElementById("profilePopup").classList.add("active");
-      document.body.style.overflow = "hidden";
+    const bgImages = ["bg1.png", "bg2.png", "bg3.png", "bg4.png"];
+    let currentBg = "bg1.png";
+
+    const hero = document.getElementById("hero");
+
+    function randomBg() {
+      let nextBg = currentBg;
+
+      while (nextBg === currentBg && bgImages.length > 1) {
+        const randomIndex = Math.floor(Math.random() * bgImages.length);
+        nextBg = bgImages[randomIndex];
+      }
+
+      currentBg = nextBg;
+      hero.style.backgroundImage = `url("${currentBg}")`;
+      updateHeaderColorFromImage(currentBg);
     }
 
-    function closeProfile() {
-      document.getElementById("profilePopup").classList.remove("active");
-      document.body.style.overflow = "auto";
+    const galleries = [
+      { start: 5, end: 16 },
+      { start: 17, end: 34 },
+      { start: 35, end: 51 },
+      { start: 52, end: 70 },
+      { start: 71, end: 94 }
+    ];
+
+    function renderGallery(index) {
+      const gallery = galleries[index];
+      const container = document.getElementById("portfolioImages");
+      const buttons = document.querySelectorAll(".project-btn");
+
+      container.innerHTML = "";
+
+      buttons.forEach((button) => button.classList.remove("active"));
+      buttons[index].classList.add("active");
+
+      for (let i = gallery.start; i <= gallery.end; i++) {
+        const img = document.createElement("img");
+        img.src = `w${i}.jpg`;
+        img.alt = `portfolio image ${i}`;
+        container.appendChild(img);
+      }
+
+      updateHeaderColorByScroll();
     }
+
+    function setHeaderColor(color) {
+      document.documentElement.style.setProperty("--header-color", color);
+    }
+
+    function updateHeaderColorFromImage(src) {
+      const img = new Image();
+      img.src = src;
+
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = 20;
+        canvas.height = 20;
+        ctx.drawImage(img, 0, 0, 20, 20);
+
+        const data = ctx.getImageData(0, 0, 20, 20).data;
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let count = 0;
+
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count++;
+        }
+
+        r = r / count;
+        g = g / count;
+        b = b / count;
+
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        setHeaderColor(brightness < 130 ? "#fff" : "#1c1c1c");
+      };
+
+      img.onerror = function () {
+        setHeaderColor("#1c1c1c");
+      };
+    }
+
+    function updateHeaderColorByScroll() {
+      const profileOpen = document.getElementById("profilePopup").classList.contains("active");
+
+      if (profileOpen) {
+        setHeaderColor("#1c1c1c");
+        return;
+      }
+
+      if (window.scrollY < window.innerHeight * 0.8) {
+        updateHeaderColorFromImage(currentBg);
+      } else {
+        setHeaderColor("#1c1c1c");
+      }
+    }
+
+    function toggleProfile() {
+      const profile = document.getElementById("profilePopup");
+
+      if (profile.classList.contains("active")) {
+        profile.classList.remove("active");
+        document.body.style.overflow = "auto";
+        updateHeaderColorByScroll();
+      } else {
+        profile.classList.add("active");
+        document.body.style.overflow = "hidden";
+        setHeaderColor("#1c1c1c");
+      }
+    }
+
+    const sound = document.getElementById("bgSound");
+
+    function playSound() {
+      sound.play();
+    }
+
+    const emailWrap = document.getElementById("emailWrap");
+
+    setInterval(() => {
+      emailWrap.classList.add("hint-active");
+
+      setTimeout(() => {
+        emailWrap.classList.remove("hint-active");
+      }, 1200);
+    }, 3000);
+
+    const logoWrap = document.getElementById("logoWrap");
+
+    setInterval(() => {
+      logoWrap.classList.add("logo-hint-active");
+
+      setTimeout(() => {
+        logoWrap.classList.remove("logo-hint-active");
+      }, 1400);
+    }, 5000);
+
+    window.addEventListener("scroll", updateHeaderColorByScroll);
+
+    window.addEventListener("load", () => {
+      currentBg = "bg1.png";
+      hero.style.backgroundImage = `url("${currentBg}")`;
+
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+
+      renderGallery(0);
+      updateHeaderColorFromImage(currentBg);
+    });
   </script>
 </body>
 </html>
