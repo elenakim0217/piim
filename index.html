@@ -1,155 +1,278 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to the Show!</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html {
-            width: 100%; height: 100%; overflow: hidden;
-            background-color: #ffffff;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChaerinKim Portfolio</title>
 
-        .container {
-            display: grid; grid-template-rows: repeat(6, 1fr);
-            width: 100vw; height: 100vh;
-        }
-        .row {
-            position: relative; display: flex; align-items: center;
-            overflow: hidden; background-color: #ffffff;
-        }
+  <style>
+    @font-face {
+      font-family: "Wanted Sans";
+      src: local("Wanted Sans Medium");
+      font-weight: 500;
+    }
 
-        /* 1. 버튼 크기 대폭 축소 (15px) */
-        .btn-container { position: absolute; left: 25px; z-index: 100; }
-        .nav-btn {
-            width: 15px; height: 15px; border-radius: 50%;
-            border: 0.5px solid #000; background: transparent;
-            color: #000; font-size: 8px; font-weight: 400;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
-            line-height: 1;
-        }
-        /* 활성화 시 배경색만 채움 */
-        .nav-btn.active { background-color: #000; color: #fff; }
+    @font-face {
+      font-family: "Gotham";
+      src: local("Gotham Medium");
+      font-weight: 500;
+    }
 
-        .image-track {
-            position: absolute; display: flex; gap: 100px;
-            will-change: transform; white-space: nowrap;
-        }
-        .image-track img { height: 143px; width: auto; object-fit: contain; }
+    @font-face {
+      font-family: "Gotham";
+      src: local("Gotham Bold");
+      font-weight: 700;
+    }
 
-    </style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fff;
+      color: #000;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 14px;
+      left: 16px;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: "Gotham", sans-serif;
+      font-weight: 700;
+      font-size: 12pt;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #000;
+    }
+
+    main {
+      width: 100%;
+    }
+
+    .portfolio-image {
+      display: block;
+      width: 100vw;
+      height: auto;
+    }
+
+    .profile-popup {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #fff;
+      z-index: 999;
+      display: none;
+    }
+
+    .profile-popup.active {
+      display: flex;
+    }
+
+    .profile-inner {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .profile-column {
+      padding: 72px 48px 48px 48px;
+      text-align: left;
+      font-family: "Wanted Sans", sans-serif;
+      font-weight: 500;
+      font-size: 12pt;
+      line-height: 1.58;
+      letter-spacing: -0.015em;
+      word-break: keep-all;
+    }
+
+    .profile-title {
+      display: block;
+      margin-bottom: 18px;
+      font-family: "Wanted Sans", sans-serif;
+      font-weight: 500;
+      font-size: 12pt;
+    }
+
+    .english-bold {
+      font-family: "Gotham", sans-serif;
+      font-weight: 700;
+      font-size: 12pt;
+    }
+
+    .close-btn {
+      position: fixed;
+      top: 14px;
+      right: 18px;
+      z-index: 1000;
+      font-family: "Gotham", sans-serif;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1;
+      background: none;
+      border: none;
+      color: #000;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .profile-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-column {
+        padding: 64px 24px 24px 24px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <header>
+    <button class="logo" onclick="openProfile()">ChaerinKim</button>
+  </header>
 
-    <div class="container" id="main-container">
-        <div class="row"><div class="btn-container"><button class="nav-btn" id="btn-1" onclick="manualControl(1)">i</button></div></div>
-        <div class="row"></div>
-        <div class="row"><div class="btn-container"><button class="nav-btn" id="btn-2" onclick="manualControl(2)">ii</button></div></div>
-        <div class="row"></div>
-        <div class="row"></div>
-        <div class="row"><div class="btn-container"><button class="nav-btn" id="btn-3" onclick="manualControl(3)">iii</button></div></div>
+  <main>
+    <section class="portfolio">
+      <img src="w1.jpg" class="portfolio-image" alt="portfolio image 1" />
+      <img src="w2.jpg" class="portfolio-image" alt="portfolio image 2" />
+      <img src="w3.jpg" class="portfolio-image" alt="portfolio image 3" />
+      <img src="w4.jpg" class="portfolio-image" alt="portfolio image 4" />
+      <img src="w5.jpg" class="portfolio-image" alt="portfolio image 5" />
+      <img src="w6.jpg" class="portfolio-image" alt="portfolio image 6" />
+      <img src="w7.jpg" class="portfolio-image" alt="portfolio image 7" />
+      <img src="w8.jpg" class="portfolio-image" alt="portfolio image 8" />
+      <img src="w9.jpg" class="portfolio-image" alt="portfolio image 9" />
+      <img src="w10.jpg" class="portfolio-image" alt="portfolio image 10" />
+      <img src="w11.jpg" class="portfolio-image" alt="portfolio image 11" />
+      <img src="w12.jpg" class="portfolio-image" alt="portfolio image 12" />
+      <img src="w13.jpg" class="portfolio-image" alt="portfolio image 13" />
+      <img src="w14.jpg" class="portfolio-image" alt="portfolio image 14" />
+      <img src="w15.jpg" class="portfolio-image" alt="portfolio image 15" />
+      <img src="w16.jpg" class="portfolio-image" alt="portfolio image 16" />
+      <img src="w17.jpg" class="portfolio-image" alt="portfolio image 17" />
+      <img src="w18.jpg" class="portfolio-image" alt="portfolio image 18" />
+      <img src="w19.jpg" class="portfolio-image" alt="portfolio image 19" />
+      <img src="w20.jpg" class="portfolio-image" alt="portfolio image 20" />
+      <img src="w21.jpg" class="portfolio-image" alt="portfolio image 21" />
+      <img src="w22.jpg" class="portfolio-image" alt="portfolio image 22" />
+      <img src="w23.jpg" class="portfolio-image" alt="portfolio image 23" />
+      <img src="w24.jpg" class="portfolio-image" alt="portfolio image 24" />
+      <img src="w25.jpg" class="portfolio-image" alt="portfolio image 25" />
+      <img src="w26.jpg" class="portfolio-image" alt="portfolio image 26" />
+      <img src="w27.jpg" class="portfolio-image" alt="portfolio image 27" />
+      <img src="w28.jpg" class="portfolio-image" alt="portfolio image 28" />
+      <img src="w29.jpg" class="portfolio-image" alt="portfolio image 29" />
+      <img src="w30.jpg" class="portfolio-image" alt="portfolio image 30" />
+      <img src="w31.jpg" class="portfolio-image" alt="portfolio image 31" />
+      <img src="w32.jpg" class="portfolio-image" alt="portfolio image 32" />
+      <img src="w33.jpg" class="portfolio-image" alt="portfolio image 33" />
+      <img src="w34.jpg" class="portfolio-image" alt="portfolio image 34" />
+      <img src="w35.jpg" class="portfolio-image" alt="portfolio image 35" />
+      <img src="w36.jpg" class="portfolio-image" alt="portfolio image 36" />
+      <img src="w37.jpg" class="portfolio-image" alt="portfolio image 37" />
+      <img src="w38.jpg" class="portfolio-image" alt="portfolio image 38" />
+      <img src="w39.jpg" class="portfolio-image" alt="portfolio image 39" />
+      <img src="w40.jpg" class="portfolio-image" alt="portfolio image 40" />
+      <img src="w41.jpg" class="portfolio-image" alt="portfolio image 41" />
+      <img src="w42.jpg" class="portfolio-image" alt="portfolio image 42" />
+      <img src="w43.jpg" class="portfolio-image" alt="portfolio image 43" />
+      <img src="w44.jpg" class="portfolio-image" alt="portfolio image 44" />
+      <img src="w45.jpg" class="portfolio-image" alt="portfolio image 45" />
+      <img src="w46.jpg" class="portfolio-image" alt="portfolio image 46" />
+      <img src="w47.jpg" class="portfolio-image" alt="portfolio image 47" />
+      <img src="w48.jpg" class="portfolio-image" alt="portfolio image 48" />
+      <img src="w49.jpg" class="portfolio-image" alt="portfolio image 49" />
+      <img src="w50.jpg" class="portfolio-image" alt="portfolio image 50" />
+      <img src="w51.jpg" class="portfolio-image" alt="portfolio image 51" />
+      <img src="w52.jpg" class="portfolio-image" alt="portfolio image 52" />
+      <img src="w53.jpg" class="portfolio-image" alt="portfolio image 53" />
+      <img src="w54.jpg" class="portfolio-image" alt="portfolio image 54" />
+      <img src="w55.jpg" class="portfolio-image" alt="portfolio image 55" />
+      <img src="w56.jpg" class="portfolio-image" alt="portfolio image 56" />
+      <img src="w57.jpg" class="portfolio-image" alt="portfolio image 57" />
+      <img src="w58.jpg" class="portfolio-image" alt="portfolio image 58" />
+      <img src="w59.jpg" class="portfolio-image" alt="portfolio image 59" />
+      <img src="w60.jpg" class="portfolio-image" alt="portfolio image 60" />
+      <img src="w61.jpg" class="portfolio-image" alt="portfolio image 61" />
+      <img src="w62.jpg" class="portfolio-image" alt="portfolio image 62" />
+      <img src="w63.jpg" class="portfolio-image" alt="portfolio image 63" />
+      <img src="w64.jpg" class="portfolio-image" alt="portfolio image 64" />
+      <img src="w65.jpg" class="portfolio-image" alt="portfolio image 65" />
+      <img src="w66.jpg" class="portfolio-image" alt="portfolio image 66" />
+      <img src="w67.jpg" class="portfolio-image" alt="portfolio image 67" />
+      <img src="w68.jpg" class="portfolio-image" alt="portfolio image 68" />
+      <img src="w69.jpg" class="portfolio-image" alt="portfolio image 69" />
+      <img src="w70.jpg" class="portfolio-image" alt="portfolio image 70" />
+      <img src="w71.jpg" class="portfolio-image" alt="portfolio image 71" />
+      <img src="w72.jpg" class="portfolio-image" alt="portfolio image 72" />
+      <img src="w73.jpg" class="portfolio-image" alt="portfolio image 73" />
+      <img src="w74.jpg" class="portfolio-image" alt="portfolio image 74" />
+      <img src="w75.jpg" class="portfolio-image" alt="portfolio image 75" />
+      <img src="w76.jpg" class="portfolio-image" alt="portfolio image 76" />
+      <img src="w77.jpg" class="portfolio-image" alt="portfolio image 77" />
+      <img src="w78.jpg" class="portfolio-image" alt="portfolio image 78" />
+      <img src="w79.jpg" class="portfolio-image" alt="portfolio image 79" />
+      <img src="w80.jpg" class="portfolio-image" alt="portfolio image 80" />
+      <img src="w81.jpg" class="portfolio-image" alt="portfolio image 81" />
+      <img src="w82.jpg" class="portfolio-image" alt="portfolio image 82" />
+      <img src="w83.jpg" class="portfolio-image" alt="portfolio image 83" />
+      <img src="w84.jpg" class="portfolio-image" alt="portfolio image 84" />
+      <img src="w85.jpg" class="portfolio-image" alt="portfolio image 85" />
+      <img src="w86.jpg" class="portfolio-image" alt="portfolio image 86" />
+      <img src="w87.jpg" class="portfolio-image" alt="portfolio image 87" />
+      <img src="w88.jpg" class="portfolio-image" alt="portfolio image 88" />
+      <img src="w89.jpg" class="portfolio-image" alt="portfolio image 89" />
+      <img src="w90.jpg" class="portfolio-image" alt="portfolio image 90" />
+      <img src="w91.jpg" class="portfolio-image" alt="portfolio image 91" />
+      <img src="w92.jpg" class="portfolio-image" alt="portfolio image 92" />
+      <img src="w93.jpg" class="portfolio-image" alt="portfolio image 93" />
+      <img src="w94.jpg" class="portfolio-image" alt="portfolio image 94" />
+      <img src="w95.jpg" class="portfolio-image" alt="portfolio image 95" />
+    </section>
+  </main>
+
+  <section id="profilePopup" class="profile-popup">
+    <button class="close-btn" onclick="closeProfile()">×</button>
+
+    <div class="profile-inner">
+      <div class="profile-column">
+        <span class="profile-title">채책</span>
+        채책은 김채린 외 2인 이상 함께하며 다양한 활동이 펼쳐지는 자유로운 소통의 공간이자 모임입니다.
+        서울 및 경기도 중심으로 미학 판단에서 영감을 얻어 실험적인 그래픽을 작업합니다.
+      </div>
+
+      <div class="profile-column">
+        <span class="profile-title">
+          2026 <span class="english-bold">Chaerin Kim</span>
+        </span>
+        어디든지 넘나들고 파고듭니다. 완전하거나 불완전해도 상관없습니다.
+        책 외에 여러 매체를 넘나드는 시각 매개 현상을 통해 실험적 공간을 펼치며,
+        오직 최소한의 이미지 안에 최대의 시각 경험을 상상하도록 유도합니다.
+      </div>
     </div>
+  </section>
 
-    <script>
-        /**
-         * [설정 포인트]
-         * 1. ROW_DURATIONS: 각 칸의 기본 이동 시간 (초)
-         * 2. SPEED_MULTIPLIER: 프로젝트별 속도 보정 (3번은 이미지가 많으므로 큰 숫자 부여)
-         */
-        const ROW_DURATIONS = [36, 45, 30, 54, 42, 48]; 
-        
-        const SPEED_MULTIPLIER = {
-            1: 1,   
-            2: 1.5, 
-            3: 12    // 3번 프로젝트는 이미지가 많아 12배 더 천천히 움직이도록 설정
-        };
+  <script>
+    function openProfile() {
+      document.getElementById("profilePopup").classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
 
-        const rows = document.querySelectorAll('.row');
-        let activeAnimations = [];
-        let currentProject = 1;
-        let cycleTimer;
-
-        function loadProject(projectNum) {
-            clearAll();
-            currentProject = projectNum;
-
-            document.querySelectorAll('.nav-btn').forEach((b, i) => {
-                b.classList.toggle('active', i === projectNum - 1);
-            });
-
-            rows.forEach((row, index) => {
-                const track = document.createElement('div');
-                track.className = 'image-track';
-                const imgSources = [];
-
-                if (projectNum === 1) {
-                    for (let i = 1; i <= 23; i++) imgSources.push(`logo-${i}.png`);
-                } else if (projectNum === 2) {
-                    for (let i = 1; i <= 40; i++) imgSources.push(`p1-${String(i).padStart(2, '0')}.png`);
-                } else if (projectNum === 3) {
-                    // p2-3.png ~ p2-147.png 형태
-                    for (let i = 3; i <= 147; i++) imgSources.push(`p2-${i}.png`);
-                }
-
-                imgSources.sort(() => Math.random() - 0.5);
-                imgSources.forEach(src => {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.onerror = () => img.remove();
-                    track.appendChild(img);
-                });
-
-                row.appendChild(track);
-
-                const finalDuration = ROW_DURATIONS[index] * SPEED_MULTIPLIER[projectNum];
-                animate(track, finalDuration);
-            });
-        }
-
-        function animate(el, duration) {
-            const parentWidth = el.parentElement.offsetWidth;
-            const elWidth = el.scrollWidth || 3000;
-            el.style.transition = 'none';
-            el.style.transform = `translateX(${-elWidth}px)`;
-            setTimeout(() => {
-                el.style.transition = `transform ${duration}s linear`;
-                el.style.transform = `translateX(${parentWidth}px)`;
-            }, 50);
-            const loop = setTimeout(() => animate(el, duration), (duration * 1000) + 100);
-            activeAnimations.push(loop);
-        }
-
-        function clearAll() {
-            activeAnimations.forEach(clearTimeout);
-            activeAnimations = [];
-            rows.forEach(row => {
-                const track = row.querySelector('.image-track');
-                if(track) track.remove();
-            });
-        }
-
-        function startCycle() {
-            loadProject(currentProject);
-            cycleTimer = setInterval(() => {
-                currentProject = (currentProject % 3) + 1;
-                loadProject(currentProject);
-            }, 30000); 
-        }
-
-        function manualControl(num) {
-            clearInterval(cycleTimer);
-            loadProject(num);
-            currentProject = num;
-            cycleTimer = setInterval(() => {
-                currentProject = (currentProject % 3) + 1;
-                loadProject(currentProject);
-            }, 30000);
-        }
-
-        window.onload = startCycle;
-    </script>
+    function closeProfile() {
+      document.getElementById("profilePopup").classList.remove("active");
+      document.body.style.overflow = "auto";
+    }
+  </script>
 </body>
 </html>
